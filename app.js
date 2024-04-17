@@ -1,8 +1,15 @@
 console.log("Let's get this party started!");
 
 const API_KEY = 'MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym';
+const $gifForm = document.querySelector(".gif-form");
+const $removeGIFsButton = document.querySelector(".remove-button");
 let $search = document.querySelector('#gif-search');
 let $gifContainer = document.querySelector('#gif-container');
+
+$gifForm.addEventListener("submit", handleClick);
+$removeGIFsButton.addEventListener('click', removeGIFs);
+
+/** search the Giphy website for a gif based on user input */
 
 async function searchForGif() {
 
@@ -13,28 +20,39 @@ async function searchForGif() {
   return gif;
 }
 
+/** conductor function that handles form input */
+
 async function handleClick(evt) {
   evt.preventDefault();
 
   const giphyData = await searchForGif();
   console.log(giphyData);
   const randGifIndex = pickRandIndex(giphyData.data);
-  addGif(giphyData.data[randGifIndex].url);
+  addGif(giphyData.data[randGifIndex].images.original.url);
 }
 
-function pickRandIndex(gifs){
+/** selects a random number based on the amount of gifs returned from
+ * searchForGif
+ */
+
+function pickRandIndex(gifs) {
   console.log('pickRandIndex', gifs);
   const gifDataLength = gifs.length;
   return Math.floor(Math.random() * gifDataLength);
 }
 
-function addGif(gifURL){
+/** appends selected gif to the gif container */
+
+function addGif(gifURL) {
   //append to gif div
   const $newGif = document.createElement("img");
-  $newGif.setAttribute('src', gifURL);
-  $gifContainer.append($newGif);
+  console.log(gifURL);
+  $newGif.src = gifURL;
+  $gifContainer.appendChild($newGif);
 }
 
+/** clears the gif container */
 
-const $gifForm = document.querySelector(".gif-form");
-$gifForm.addEventListener("submit", handleClick);
+function removeGIFs() {
+  $gifContainer.innerHTML = '';
+}
